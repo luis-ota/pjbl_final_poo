@@ -7,13 +7,12 @@ import java.sql.*;
 
 public class DAO {
     String tabela;
-    List<String> campo;
+    List<String> campos;
     Object dto;
-    String comando;
 
-    public DAO(String tabela, List<String> campo, Object dto) {
+    public DAO(String tabela, List<String> campos, Object dto) {
         this.tabela = tabela;
-        this.campo = campo;
+        this.campos = campos;
         this.dto = dto;
 
     }
