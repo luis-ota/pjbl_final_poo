@@ -1,4 +1,5 @@
 package dao;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,14 +8,10 @@ import java.sql.*;
 
 public class DAO {
     String tabela;
-    List<String> campo;
-    Object dto;
-    String comando;
 
-    public DAO(String tabela, List<String> campo, Object dto) {
+
+    public DAO(String tabela) {
         this.tabela = tabela;
-        this.campo = campo;
-        this.dto = dto;
 
     }
 
@@ -32,32 +29,33 @@ public class DAO {
         String url = "jdbc:mysql://localhost:3306/medicaly";
 
         try {
-            connection = DriverManager.getConnection(url, "root", "PUC@1234");
+            connection = DriverManager.getConnection(url, "root", "123qwe");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return connection;
     }
-    public void select() throws SQLException {
-        // Obtém a conexão com o banco de dados
+    public void select(ArrayList<String> campos) throws SQLException {
         Connection conn = getConexaoMySQL();
 
-        // Monta a query SQL para selecionar todos os registros da tabela
-        String query = "SELECT * FROM " + this.tabela;
+        String camposString = String.join(", ", campos);
 
-        // Cria um objeto Statement para executar a query
+        String query = String.format("SELECT %s FROM %s", camposString, this.tabela);
+
         Statement st = conn.createStatement();
 
-        // Executa a query e obtém um ResultSet com os resultados
         ResultSet rs = st.executeQuery(query);
 
-        // Itera sobre os resultados do ResultSet
         while (rs.next()) {
-            System.out.println(rs.getObject(2));
+            for (int i = 1; campos.size() >= i; i++) {
+
+                System.out.printf("%s | ", rs.getObject(i));
+
+            }
+            System.out.println();
         }
 
-        // Fecha o ResultSet, o Statement e a conexão com o banco de dados
         rs.close();
         st.close();
         conn.close();
