@@ -11,13 +11,16 @@ import java.util.Map;
 public class DAO {
     String tabela;
 
+    Connection connection;
+
 
     public DAO(String tabela) {
         this.tabela = tabela;
+        this.getConexaoMySQL();
 
     }
 
-    public static java.sql.Connection getConexaoMySQL() {
+    public void getConexaoMySQL() {
         // Atributo do tipo Connection
         Connection connection = null;
 
@@ -36,13 +39,17 @@ public class DAO {
             e.printStackTrace();
         }
 
-        return connection;
+        this.connection = connection;
     }
     public ArrayList<Map<String, String>> select(ArrayList<String> campos) throws SQLException {
-        Connection conn = getConexaoMySQL();
+        Connection conn = this.connection;
+
         String camposString = String.join(", ", campos);
+
         String query = String.format("SELECT %s FROM %s", camposString, this.tabela);
+
         Statement st = conn.createStatement();
+
         ResultSet rs = st.executeQuery(query);
 
         ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
@@ -56,6 +63,40 @@ public class DAO {
         }
 
         rs.close();
+        st.close();
+        conn.close();
+    }
+
+    public void insert(HashMap<String, String> dados) throws SQLException {
+        this.getConexaoMySQL();
+        Connection conn = this.connection;
+
+        ArrayList<String> camposS = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : dados.entrySet()) {
+            camposS.add(String.format("%s", entry.getKey()));
+        }
+
+        String camposSFormated = String.join(", ", camposS);
+
+        String query = "INSERT INTO " + this.tabela;
+        query += String.format(" (Id, %s) VALUES (", camposSFormated);
+
+        ArrayList<String> camposX = new ArrayList<>();
+        camposX.add("UUID()");
+        for (Map.Entry<String, String> entry : dados.entrySet()) {
+            camposX.add(String.format("'%s'", entry.getValue()));
+        }
+        String camposSFormatedX = String.join(", ", camposX);
+
+        query+=camposSFormatedX;
+        query+=");";
+
+
+        Statement st = conn.createStatement();
+
+        st.executeUpdate(query);
+
         st.close();
         conn.close();
 

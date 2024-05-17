@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="medicaly@localhost" uuid="d39b6419-dca8-4deb-add6-18d0c28f3098">
+    <data-source source="LOCAL" name="@localhost" uuid="d39b6419-dca8-4deb-add6-18d0c28f3098">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+<<<<<<< HEAD
+      <jdbc-url>jdbc:mysql://localhost:3306/</jdbc-url>
+=======
       <jdbc-url>jdbc:mysql://localhost:3306/medicaly</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
@@ -24,6 +27,7 @@
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
+>>>>>>> c442ac741ceda9c00c25cfe632f33bc5f1dd69a9
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="@localhost" uuid="f4568ccb-f2ed-4fa5-9e54-c29de94e8031">
