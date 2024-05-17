@@ -92,7 +92,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Agendar Consulta")) {
             cardLayout.show(cardPanel, "Agendar Consulta");
-        } else if (e.getActionCommand().equals("Início")) {
+        } else if (e.getActionCommand().equals("Voltar")) {
             cardLayout.show(cardPanel, "Home");
         }
     }
