@@ -9,7 +9,6 @@ import java.sql.*;
 public class DAO {
     String tabela;
 
-
     public DAO(String tabela) {
         this.tabela = tabela;
 
