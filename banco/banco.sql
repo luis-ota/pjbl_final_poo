@@ -1,4 +1,5 @@
-CREATE DATABASE IF NOT EXISTS medicaly;
+DROP DATABASE IF EXISTS medicaly;
+CREATE DATABASE medicaly;
 USE medicaly;
 
 CREATE TABLE `Enderecos` (
@@ -32,18 +33,7 @@ CREATE TABLE `Profissionais` (
                                  `Id` CHAR(36) NOT NULL,
                                  `Nome` VARCHAR(100) NOT NULL,
                                  `Sobrenome` VARCHAR(100) NOT NULL,
-                                 `Cpf` VARCHAR(100) NOT NULL,
-                                 `Email` VARCHAR(100) NOT NULL,
-                                 `Telefone` VARCHAR(100) NOT NULL,
-                                 `DataNascimento` VARCHAR(100) NOT NULL,
-                                 `Genero` VARCHAR(100) NOT NULL,
-                                 `EnderecoId` CHAR(36),
-                                 `CredencialDeSaúde` VARCHAR(100) NOT NULL,
-                                 `Atuações` VARCHAR(100) NOT NULL,
                                  `Especialidades` VARCHAR(100) NOT NULL,
-                                 `Tipo` VARCHAR(100) NOT NULL,
-                                 `InicioExpediente` VARCHAR(100) NOT NULL,
-                                 `FimExpediente` VARCHAR(100) NOT NULL,
                                  PRIMARY KEY (`Id`)
 );
 
@@ -56,14 +46,14 @@ INSERT INTO `Enderecos` (`Id`, `Cep`, `Estado`, `Logradouro`, `Numero`, `Bairro`
 
 -- Inserts para tabela Pacientes
 INSERT INTO `Pacientes` (`Id`, `Nome`, `Sobrenome`, `Cpf`, `Email`, `Telefone`, `DataNascimento`, `Genero`, `EnderecoId`) VALUES
-                                                                                                                              (UUID(), 'João', 'Silva', '12345678901', 'joao@example.com', '11987654321', '1990-05-20', '1', (SELECT `Id` FROM `Enderecos` LIMIT 1)),
+                                                                                                                              (UUID(), 'João', 'Silva', '12345678901', 'joao@example.com', '11987654321', '1990-05-20', '1', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 0)),
                                                                                                                               (UUID(), 'Maria', 'Santos', '23456789012', 'maria@example.com', '21987654321', '1985-08-15', '2', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 1)),
                                                                                                                               (UUID(), 'José', 'Oliveira', '34567890123', 'jose@example.com', '31987654321', '1978-12-10', '1', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 2)),
-                                                                                                                              (UUID(), 'Ana', 'Souza', '45678901234', 'ana@example.com', '31987654321', '2000-02-28', '2', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 3));
+                                                                                                                              (UUID(), 'Ana', 'Souza', '45678901234', 'ana@example.com', '41987654321', '2000-02-28', '2', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 3));
 
 -- Inserts para tabela Profissionais
-INSERT INTO `Profissionais` (`Id`, `Nome`, `Sobrenome`, `Cpf`, `Email`, `Telefone`, `DataNascimento`, `Genero`, `EnderecoId`, `CredencialDeSaúde`, `Atuações`, `Especialidades`, `Tipo`, `InicioExpediente`, `FimExpediente`) VALUES
-                                                                                                                                                                                                                                  (UUID(), 'Pedro', 'Ribeiro', '56789012345', 'pedro@example.com', '11987654321', '1980-03-15', '1', (SELECT `Id` FROM `Enderecos` LIMIT 1), 'CRM12345', 'Clínico Geral', 'Clínica Médica', '1', '08:00:00', '17:00:00'),
-                                                                                                                                                                                                                                  (UUID(), 'Juliana', 'Martins', '67890123456', 'juliana@example.com', '21987654321', '1975-07-25', '2', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 1), 'CRM23456', 'Pediatra', 'Pediatria', '1', '09:00:00', '18:00:00'),
-                                                                                                                                                                                                                                  (UUID(), 'Rafael', 'Almeida', '78901234567', 'rafael@example.com', '31987654321', '1988-10-30', '1', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 2), 'CRM34567', 'Dentista', 'Odontologia', '2', '10:00:00', '19:00:00'),
-                                                                                                                                                                                                                                  (UUID(), 'Carla', 'Ferreira', '89012345678', 'carla@example.com', '41987654321', '1995-04-05', '2', (SELECT `Id` FROM `Enderecos` LIMIT 1 OFFSET 3), 'CRM45678', 'Psicóloga', 'Psicologia', '2', '10:00:00', '19:00:00');
+INSERT INTO `Profissionais` (`Id`, `Nome`, `Sobrenome`, `Especialidades`) VALUES
+                                                                              (UUID(), 'Pedro', 'Ribeiro', 'Clínica Médica'),
+                                                                              (UUID(), 'Juliana', 'Martins', 'Pediatria'),
+                                                                              (UUID(), 'Rafael', 'Almeida', 'Odontologia'),
+                                                                              (UUID(), 'Carla', 'Ferreira', 'Psicologia');

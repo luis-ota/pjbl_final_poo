@@ -21,7 +21,6 @@ public class DAO {
     }
 
     public void getConexaoMySQL() {
-        // Atributo do tipo Connection
         Connection connection = null;
 
         String driverName = "com.mysql.cj.jdbc.Driver";
@@ -34,14 +33,14 @@ public class DAO {
         String url = "jdbc:mysql://localhost:3306/medicaly";
 
         try {
-            connection = DriverManager.getConnection(url, "root", "PUC@1234");
+            connection = DriverManager.getConnection(url, "root", "123qwe");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         this.connection = connection;
     }
-    public void select(ArrayList<String> campos) throws SQLException {
+    public ArrayList<Map<String, String>> select(ArrayList<String> campos) throws SQLException {
         Connection conn = this.connection;
 
         String camposString = String.join(", ", campos);
@@ -52,19 +51,24 @@ public class DAO {
 
         ResultSet rs = st.executeQuery(query);
 
+        ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
+
         while (rs.next()) {
+            Map<String, String> currentResult = new HashMap<String, String>();
             for (int i = 1; campos.size() >= i; i++) {
-
-
+                currentResult.put(campos.get(i-1), rs.getString(i));
             }
+            result.add(currentResult);
         }
 
         rs.close();
         st.close();
         conn.close();
+
+        return result;
     }
 
-    public void insert(HashMap<String, String> dados) throws SQLException {
+    public void insert(Map<String, String> dados) throws SQLException {
         this.getConexaoMySQL();
         Connection conn = this.connection;
 
