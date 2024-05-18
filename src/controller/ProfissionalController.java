@@ -5,6 +5,7 @@ import models.Paciente;
 import models.Profissional;
 import utils.ConvertMap;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -34,5 +35,12 @@ public class ProfissionalController {
     }
 
     public void adicionar(Profissional novoMedico) {
+        try {
+            dao.insert(ConvertMap.objectToMap(novoMedico));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

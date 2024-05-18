@@ -23,14 +23,16 @@ public class ConvertMap {
         return obj;
     }
 
-    public static Map<String, Object> objectToMap(Object obj) throws Exception {
-        Map<String, Object> map = new HashMap<>();
+    public static Map<String, String> objectToMap(Object obj) throws Exception {
+        Map<String, String> map = new HashMap<>();
         Class<?> clazz = obj.getClass();
 
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
-            map.put(field.getName(), field.get(obj));
+            String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
+            map.put(fieldName, field.get(obj).toString());
         }
+
 
         return map;
     }

@@ -21,7 +21,6 @@ public class DAO {
     }
 
     public void getConexaoMySQL() {
-        // Atributo do tipo Connection
         Connection connection = null;
 
         String driverName = "com.mysql.cj.jdbc.Driver";
@@ -65,9 +64,11 @@ public class DAO {
         rs.close();
         st.close();
         conn.close();
+
+        return result;
     }
 
-    public void insert(HashMap<String, String> dados) throws SQLException {
+    public void insert(Map<String, String> dados) throws SQLException {
         this.getConexaoMySQL();
         Connection conn = this.connection;
 
@@ -99,8 +100,6 @@ public class DAO {
 
         st.close();
         conn.close();
-
-        return result;
     }
 }
 
