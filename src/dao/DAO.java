@@ -33,7 +33,7 @@ public class DAO {
         String url = "jdbc:mysql://localhost:3306/medicaly";
 
         try {
-            connection = DriverManager.getConnection(url, "root", "123qwe");
+            connection = DriverManager.getConnection(url, "root", "PUC@1234");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,6 +92,34 @@ public class DAO {
 
         query+=camposSFormatedX;
         query+=");";
+
+
+        Statement st = conn.createStatement();
+
+        st.executeUpdate(query);
+
+        st.close();
+        conn.close();
+    }
+
+    public void update(Map<String, String> dados, String id) throws SQLException {
+        this.getConexaoMySQL();
+        Connection conn = this.connection;
+
+        ArrayList<String> camposS = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : dados.entrySet()) {
+            camposS.add(String.format("\n  %s = '%s'", entry.getKey(), entry.getValue()));
+        }
+
+        String camposSFormated = String.join(", ", camposS);
+
+        String query =  "UPDATE " + this.tabela + " \nSET %s\nWHERE id = '%s'";
+
+        query=String.format(query, camposSFormated, id);
+
+
+        System.out.println(query);
 
 
         Statement st = conn.createStatement();

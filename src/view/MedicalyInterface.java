@@ -204,12 +204,25 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     private JPanel createDoctorSquare(String name, String specialty) {
         JPanel doctorPanel = new JPanel(new BorderLayout());
         doctorPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabel nameLabel = new JLabel(name, JLabel.LEFT);
-        JLabel specialtyLabel = new JLabel(specialty, JLabel.LEFT);
+
+        JLabel nameLabel = new JLabel(name);
+        JLabel specialtyLabel = new JLabel(new String("          " + specialty));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JButton editar = new JButton("Editar");
+        JButton deletar = new JButton("Deletar");
+
+        buttonPanel.add(editar);
+        buttonPanel.add(deletar);
+
         doctorPanel.add(nameLabel, BorderLayout.WEST);
-        doctorPanel.add(specialtyLabel, BorderLayout.EAST);
+        doctorPanel.add(specialtyLabel, BorderLayout.CENTER);
+        doctorPanel.add(buttonPanel, BorderLayout.EAST);
+
         return doctorPanel;
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

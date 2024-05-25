@@ -43,4 +43,14 @@ public class ProfissionalController {
             throw new RuntimeException(e);
         }
     }
+
+    public void atualizar(Profissional Medico) {
+        try {
+            dao.update(ConvertMap.objectToMap(Medico), Medico.id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

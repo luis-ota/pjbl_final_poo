@@ -1,12 +1,34 @@
 package models;
 
 public class Paciente {
-    public String id;
-    public String nome;
-    public String sobrenome;
-    public String telefone;
+    private String id;
+    private String nome;
+    private String sobrenome;
+    private String telefone;
 
-    public String nomeCompleto() {
+    private String getNomeCompleto() {
         return nome + " " + sobrenome;
     }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String getSobrenome() {
+        return this.sobrenome;
+    }
+
+    public String getTelefone() {
+        return this.telefone;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+
 }
+
+
+
+
