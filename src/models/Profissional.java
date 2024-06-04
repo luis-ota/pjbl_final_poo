@@ -1,6 +1,6 @@
 package models;
 
-public class Profissional {
+public class Profissional extends User{
     private String nome;
     private String sobrenome;
     private String especialidades;
@@ -34,12 +34,18 @@ public class Profissional {
         return sobrenome;
     }
 
+
     public String getEspecialidades(){
         return especialidades;
     }
 
     public String getId(){
         return id;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Profissional";
     }
 
 

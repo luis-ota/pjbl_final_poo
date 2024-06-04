@@ -1,12 +1,28 @@
 package models;
 
-public class Paciente {
+public class Paciente extends User{
     private String id;
     private String nome;
     private String sobrenome;
-    private String telefone;
+    private String cpf;
 
-    private String getNomeCompleto() {
+    public Paciente(String id, String nome, String sobrenome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.sobrenome = sobrenome;
+        this.id = id;
+    }
+
+    public Paciente(){
+
+    }
+    public Paciente(String nome, String sobrenome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.sobrenome = sobrenome;
+    }
+
+    public String getNomeCompleto() {
         return nome + " " + sobrenome;
     }
 
@@ -18,12 +34,17 @@ public class Paciente {
         return this.sobrenome;
     }
 
-    public String getTelefone() {
-        return this.telefone;
+    public String getCpf() {
+        return this.cpf;
     }
 
     public String getId() {
         return this.id;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Paciente";
     }
 
 

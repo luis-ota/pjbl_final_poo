@@ -1,56 +1,22 @@
 package dao;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.*;
 import java.util.Map;
 
-public class DAO {
-    String tabela;
-
-    Connection connection;
-
-
+public class DAO extends AbstractDAO {
     public DAO(String tabela) {
-        this.tabela = tabela;
-        this.getConexaoMySQL();
-
+        super(tabela);
     }
 
-    public void getConexaoMySQL() {
-        Connection connection = null;
-
-        String driverName = "com.mysql.cj.jdbc.Driver";
-        try {
-            Class.forName(driverName);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        String url = "jdbc:mysql://localhost:3306/medicaly";
-
-        try {
-            connection = DriverManager.getConnection(url, "root", "PUC@1234");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        this.connection = connection;
-    }
+    @Override
     public ArrayList<Map<String, String>> select(ArrayList<String> campos) throws SQLException {
         Connection conn = this.connection;
-
         String camposString = String.join(", ", campos);
-
         String query = String.format("SELECT %s FROM %s", camposString, this.tabela);
-
         Statement st = conn.createStatement();
-
         ResultSet rs = st.executeQuery(query);
-
         ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
 
         while (rs.next()) {
@@ -68,10 +34,9 @@ public class DAO {
         return result;
     }
 
+    @Override
     public void insert(Map<String, String> dados) throws SQLException {
-        this.getConexaoMySQL();
         Connection conn = this.connection;
-
         ArrayList<String> camposS = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : dados.entrySet()) {
@@ -79,9 +44,7 @@ public class DAO {
         }
 
         String camposSFormated = String.join(", ", camposS);
-
-        String query = "INSERT INTO " + this.tabela;
-        query += String.format(" (Id, %s) VALUES (", camposSFormated);
+        String query = "INSERT INTO " + this.tabela + String.format(" (%s) VALUES (", camposSFormated);
 
         ArrayList<String> camposX = new ArrayList<>();
         camposX.add("UUID()");
@@ -90,22 +53,17 @@ public class DAO {
         }
         String camposSFormatedX = String.join(", ", camposX);
 
-        query+=camposSFormatedX;
-        query+=");";
-
-
+        query += camposSFormatedX + ");";
         Statement st = conn.createStatement();
-
         st.executeUpdate(query);
 
         st.close();
         conn.close();
     }
 
+    @Override
     public void update(Map<String, String> dados, String id) throws SQLException {
-        this.getConexaoMySQL();
         Connection conn = this.connection;
-
         ArrayList<String> camposS = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : dados.entrySet()) {
@@ -113,21 +71,28 @@ public class DAO {
         }
 
         String camposSFormated = String.join(", ", camposS);
-
         String query =  "UPDATE " + this.tabela + " \nSET %s\nWHERE id = '%s'";
-
-        query=String.format(query, camposSFormated, id);
-
-
-        System.out.println(query);
-
+        query = String.format(query, camposSFormated, id);
 
         Statement st = conn.createStatement();
+        st.executeUpdate(query);
 
+        st.close();
+        conn.close();
+    }
+
+    @Override
+    public void delet(String id) throws SQLException {
+        Connection conn = this.connection;
+
+
+
+        String query =  String.format("DELETE FROM %s WHERE id = '%s'",this.tabela, id);
+
+        Statement st = conn.createStatement();
         st.executeUpdate(query);
 
         st.close();
         conn.close();
     }
 }
-
