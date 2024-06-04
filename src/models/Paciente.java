@@ -1,55 +1,31 @@
 package models;
 
-public class Paciente extends User{
-    private String id;
-    private String nome;
-    private String sobrenome;
+public class Paciente extends User {
     private String cpf;
 
     public Paciente(String id, String nome, String sobrenome, String cpf) {
-        this.nome = nome;
+        super(id, nome, sobrenome);
         this.cpf = cpf;
-        this.sobrenome = sobrenome;
-        this.id = id;
-    }
-
-    public Paciente(){
-
     }
     public Paciente(String nome, String sobrenome, String cpf) {
-        this.nome = nome;
+        super(nome, sobrenome);
         this.cpf = cpf;
-        this.sobrenome = sobrenome;
+    }
+    public Paciente() {
+
     }
 
-    public String getNomeCompleto() {
-        return nome + " " + sobrenome;
-    }
-
-    public String getNome() {
-        return this.nome;
-    }
-
-    public String getSobrenome() {
-        return this.sobrenome;
-    }
 
     public String getCpf() {
-        return this.cpf;
+        return cpf;
     }
 
-    public String getId() {
-        return this.id;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @Override
     public String getTipo() {
         return "Paciente";
     }
-
-
 }
-
-
-
-

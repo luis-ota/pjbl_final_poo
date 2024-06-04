@@ -5,23 +5,45 @@ public abstract class User {
     private String nome;
     private String sobrenome;
 
+    public User(String id, String nome, String sobrenome) {
+        this.id = id;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+    }
+
+    public User(String nome, String sobrenome) {
+    }
+    public User() {
+    }
+
+
     public String getNomeCompleto() {
         return nome + " " + sobrenome;
     }
 
     public String getNome() {
-        return this.nome;
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getSobrenome() {
-        return this.sobrenome;
+        return sobrenome;
     }
 
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
-    // Adicionando o método abstrato
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public abstract String getTipo();
 }

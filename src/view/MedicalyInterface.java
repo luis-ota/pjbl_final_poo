@@ -16,8 +16,12 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     private JPanel cardPanel;
     private JPanel doctorsPanel;
     private JPanel addDoctorPanel;
+    private JPanel editDoctorPanel;
     private JPanel pacientesPanel;
     private JPanel addPacientePanel;
+    private JPanel editPacientePanel;
+
+    private ProfissionalController profissionalController = new ProfissionalController();
 
     public MedicalyInterface() {
         setTitle("Medica.ly");
@@ -42,7 +46,6 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         sidePanel.add(pacientesButton);
         sidePanel.add(adicionarMedicoButton);
         sidePanel.add(adicionarPacienteButton);
-
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -138,11 +141,11 @@ public class MedicalyInterface extends JFrame implements ActionListener {
                 Profissional novoMedico = new Profissional(nome, especialidade, sobrenome);
                 System.out.println(novoMedico.getNomeCompleto());
                 controller.adicionar(novoMedico);
-                addDoctor(novoMedico, doctorsPanel.getComponentCount()); // Add to panel
+                addDoctor(novoMedico, doctorsPanel.getComponentCount());
                 nomeMedicoField.setText("");
                 especialidadeMedicoField.setText("");
                 sobrenomeMedicoField.setText("");
-                cardLayout.show(cardPanel, "Tabela Médico"); // Switch back to doctor list
+                cardLayout.show(cardPanel, "Tabela Médico");
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -177,7 +180,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         gbc.gridy = 1;
         addPacientePanel.add(sobrenomePacienteField, gbc);
 
-        JLabel cpfPacienteLabel = new JLabel("Telefone:");
+        JLabel cpfPacienteLabel = new JLabel("CPF:");
         gbc.gridx = 0;
         gbc.gridy = 2;
         addPacientePanel.add(cpfPacienteLabel, gbc);
@@ -201,11 +204,11 @@ public class MedicalyInterface extends JFrame implements ActionListener {
                 Paciente novoPaciente = new Paciente(nome, sobrenome, cpf);
                 System.out.println(novoPaciente.getNomeCompleto());
                 controller.adicionar(novoPaciente);
-                addPaciente(novoPaciente, pacientesPanel.getComponentCount()); // Add to panel
+                addPaciente(novoPaciente, pacientesPanel.getComponentCount());
                 nomePacienteField.setText("");
                 sobrenomePacienteField.setText("");
                 cpfPacienteField.setText("");
-                cardLayout.show(cardPanel, "Tabela Paciente"); // Switch back to patient list
+                cardLayout.show(cardPanel, "Tabela Paciente");
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -215,8 +218,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     }
 
     private void setDoutores() {
-        ProfissionalController controller = new ProfissionalController();
-        ArrayList<Profissional> profissionais = controller.listar();
+        ArrayList<Profissional> profissionais = profissionalController.listar();
         int row = 0;
         for (Profissional profissional : profissionais) {
             addDoctor(profissional, row++);
@@ -233,7 +235,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     }
 
     private void addDoctor(Profissional p, int row) {
-        JPanel doctorSquare = createDoctorSquare(p.getNomeCompleto(), p.getEspecialidades());
+        JPanel doctorSquare = createDoctorSquare(p, row);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -244,7 +246,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     }
 
     private void addPaciente(Paciente p, int row) {
-        JPanel pacienteSquare = createPacienteSquare(p.getNomeCompleto(), p.getCpf());
+        JPanel pacienteSquare = createPacienteSquare(p);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -254,12 +256,12 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         pacientesPanel.add(pacienteSquare, gbc);
     }
 
-    private JPanel createPacienteSquare(String name, String cpf) {
+    private JPanel createPacienteSquare(Paciente paciente) {
         JPanel pacientePanel = new JPanel(new BorderLayout());
         pacientePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JLabel nameLabel = new JLabel(name);
-        JLabel cpfLabel = new JLabel(new String("          " + cpf));
+        JLabel nameLabel = new JLabel(paciente.getNomeCompleto());
+        JLabel cpfLabel = new JLabel(new String("          " + paciente.getCpf()));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -273,15 +275,103 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         pacientePanel.add(cpfLabel, BorderLayout.CENTER);
         pacientePanel.add(buttonPanel, BorderLayout.EAST);
 
+        deletar.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza de que deseja deletar este paciente?", "Confirmar Deleção", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                PacienteController controller = new PacienteController();
+                controller.deletar(paciente);
+                pacientesPanel.remove(pacientePanel);
+                pacientesPanel.revalidate();
+                pacientesPanel.repaint();
+            }
+        });
+        editar.addActionListener(e -> {
+            showEditPacientePanel(paciente);
+        });
+
+
         return pacientePanel;
     }
 
-    private JPanel createDoctorSquare(String name, String specialty) {
+    private void showEditPacientePanel(Paciente paciente) {
+        if (editPacientePanel == null) {
+            editPacientePanel = new JPanel(new GridBagLayout());
+        } else {
+            editPacientePanel.removeAll();
+        }
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel nomePacienteLabel = new JLabel("Nome do Paciente:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        editPacientePanel.add(nomePacienteLabel, gbc);
+
+        JTextField nomePacienteField = new JTextField(20);
+        nomePacienteField.setText(paciente.getNome());
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        editPacientePanel.add(nomePacienteField, gbc);
+
+        JLabel sobrenomePacienteLabel = new JLabel("Sobrenome do Paciente:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        editPacientePanel.add(sobrenomePacienteLabel, gbc);
+
+        JTextField sobrenomePacienteField = new JTextField(20);
+        sobrenomePacienteField.setText(paciente.getSobrenome());
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        editPacientePanel.add(sobrenomePacienteField, gbc);
+
+        JLabel cpfPacienteLabel = new JLabel("CPF:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        editPacientePanel.add(cpfPacienteLabel, gbc);
+
+        JTextField cpfPacienteField = new JTextField(20);
+        cpfPacienteField.setText(paciente.getCpf());
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        editPacientePanel.add(cpfPacienteField, gbc);
+
+        JButton atualizarPacienteConfirmButton = new JButton("Atualizar Paciente");
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        editPacientePanel.add(atualizarPacienteConfirmButton, gbc);
+
+        atualizarPacienteConfirmButton.addActionListener(e -> {
+            String nome = nomePacienteField.getText();
+            String sobrenome = sobrenomePacienteField.getText();
+            String cpf = cpfPacienteField.getText();
+            if (!nome.isEmpty() && !sobrenome.isEmpty() && !cpf.isEmpty()) {
+                paciente.setNome(nome);
+                paciente.setSobrenome(sobrenome);
+                paciente.setCpf(cpf);
+
+                PacienteController controller = new PacienteController();
+                controller.atualizar(paciente);
+                pacientesPanel.removeAll();
+                setPacientes();
+                cardLayout.show(cardPanel, "Tabela Paciente");
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        cardPanel.add(editPacientePanel, "Editar Paciente");
+        cardLayout.show(cardPanel, "Editar Paciente");
+    }
+
+
+    private JPanel createDoctorSquare(Profissional profissional, int row) {
         JPanel doctorPanel = new JPanel(new BorderLayout());
         doctorPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JLabel nameLabel = new JLabel(name);
-        JLabel specialtyLabel = new JLabel(new String("          " + specialty));
+        JLabel nameLabel = new JLabel(profissional.getNomeCompleto());
+        JLabel specialtyLabel = new JLabel(new String("          " + profissional.getEspecialidades()));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -295,7 +385,94 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         doctorPanel.add(specialtyLabel, BorderLayout.CENTER);
         doctorPanel.add(buttonPanel, BorderLayout.EAST);
 
+        deletar.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza de que deseja deletar este médico?", "Confirmar Deleção", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                ProfissionalController controller = new ProfissionalController();
+                controller.deletar(profissional);
+                doctorsPanel.remove(doctorPanel);
+                doctorsPanel.revalidate();
+                doctorsPanel.repaint();
+            }
+        });
+
+        editar.addActionListener(e -> {
+            showEditDoctorPanel(profissional);
+        });
+
         return doctorPanel;
+    }
+
+    private void showEditDoctorPanel(Profissional profissional) {
+        if (editDoctorPanel == null) {
+            editDoctorPanel = new JPanel(new GridBagLayout());
+        } else {
+            editDoctorPanel.removeAll();
+        }
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel nomeMedicoLabel = new JLabel("Nome do Médico:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        editDoctorPanel.add(nomeMedicoLabel, gbc);
+
+        JTextField nomeMedicoField = new JTextField(20);
+        nomeMedicoField.setText(profissional.getNome());
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        editDoctorPanel.add(nomeMedicoField, gbc);
+
+        JLabel sobrenomeMedicoLabel = new JLabel("Sobrenome do Médico:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        editDoctorPanel.add(sobrenomeMedicoLabel, gbc);
+
+        JTextField sobrenomeMedicoField = new JTextField(20);
+        sobrenomeMedicoField.setText(profissional.getSobrenome());
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        editDoctorPanel.add(sobrenomeMedicoField, gbc);
+
+        JLabel especialidadeMedicoLabel = new JLabel("Especialidade:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        editDoctorPanel.add(especialidadeMedicoLabel, gbc);
+
+        JTextField especialidadeMedicoField = new JTextField(20);
+        especialidadeMedicoField.setText(profissional.getEspecialidades());
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        editDoctorPanel.add(especialidadeMedicoField, gbc);
+
+        JButton atualizarMedicoConfirmButton = new JButton("Atualizar Profissional");
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        editDoctorPanel.add(atualizarMedicoConfirmButton, gbc);
+
+        atualizarMedicoConfirmButton.addActionListener(e -> {
+            String nome = nomeMedicoField.getText();
+            String sobrenome = sobrenomeMedicoField.getText();
+            String especialidade = especialidadeMedicoField.getText();
+            if (!nome.isEmpty() && !especialidade.isEmpty() && !sobrenome.isEmpty()) {
+                profissional.setNome(nome);
+                profissional.setSobrenome(sobrenome);
+                profissional.setEspecialidades(especialidade);
+
+                ProfissionalController controller = new ProfissionalController();
+                controller.atualizar(profissional);
+                doctorsPanel.removeAll();
+                setDoutores();
+                cardLayout.show(cardPanel, "Tabela Médico");
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        cardPanel.add(editDoctorPanel, "Editar Médico");
+        cardLayout.show(cardPanel, "Editar Médico");
     }
 
     @Override

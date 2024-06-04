@@ -14,10 +14,10 @@ public abstract class AbstractDAO {
         this.getConexaoMySQL();
     }
 
-    public abstract ArrayList<Map<String, String>> select(ArrayList<String> campos) throws SQLException;
-    public abstract void insert(Map<String, String> dados) throws SQLException;
-    public abstract void update(Map<String, String> dados, String id) throws SQLException;
-    public abstract void delet(String id) throws SQLException;
+    public abstract ArrayList<Map<String, String>> select(ArrayList<String> campos) throws SQLException, DAOException;
+    public abstract void insert(Map<String, String> dados) throws SQLException, DAOException;
+    public abstract void update(Map<String, String> dados, String id) throws SQLException, DAOException;
+    public abstract void delet(String id) throws SQLException, DAOException;
 
     public void getConexaoMySQL() {
         String driverName = "com.mysql.cj.jdbc.Driver";
@@ -30,7 +30,7 @@ public abstract class AbstractDAO {
         String url = "jdbc:mysql://localhost:3306/medicaly";
 
         try {
-            connection = DriverManager.getConnection(url, "root", "PUC@1234");
+            connection = DriverManager.getConnection(url, "root", "luis");
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,46 +1,22 @@
 package models;
 
-public class Profissional extends User{
-    private String nome;
-    private String sobrenome;
-    private String especialidades;
-    private String id;
+public class Profissional extends User {
+    private String especialidade;
 
-    public Profissional(String nome, String especialidade, String sobrenome) {
-        this.nome = nome;
-        this.especialidades = especialidade;
-        this.sobrenome = sobrenome;
+    public Profissional(String id, String nome, String sobrenome, String especialidade) {
+        super(id, nome, sobrenome);
+        this.especialidade = especialidade;
+    }
+    public Profissional(String nome, String sobrenome, String especialidade) {
+        super(nome, sobrenome);
+        this.especialidade = especialidade;
     }
 
     public Profissional() {
     }
 
-    public Profissional(String nome, String especialidade, String sobrenome, String id) {
-        this.nome = nome;
-        this.especialidades = especialidade;
-        this.sobrenome = sobrenome;
-        this.id = id;
-    }
-
-    public String getNomeCompleto() {
-        return nome + " " + sobrenome;
-    }
-
-    public String getNome(){
-        return nome;
-    }
-
-    public String getSobrenome(){
-        return sobrenome;
-    }
-
-
-    public String getEspecialidades(){
-        return especialidades;
-    }
-
-    public String getId(){
-        return id;
+    public void setEspecialidades(String especialidade) {
+        this.especialidade = especialidade;
     }
 
     @Override
@@ -48,5 +24,7 @@ public class Profissional extends User{
         return "Profissional";
     }
 
-
+    public String getEspecialidades() {
+        return this.especialidade;
+    }
 }

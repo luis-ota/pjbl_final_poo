@@ -1,6 +1,6 @@
 package utils;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,14 +9,17 @@ public class ConvertMap {
         T obj = clazz.getDeclaredConstructor().newInstance();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
+            String fieldName = entry.getKey();
+            String fieldValue = entry.getValue();
+            String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
             try {
-                Field field = clazz.getDeclaredField(entry.getKey().toLowerCase());
-                field.setAccessible(true);
-                field.set(obj, entry.getValue());
-            } catch (NoSuchFieldException e) {
-                System.out.println("No such field: " + entry.getKey());
-            } catch (IllegalAccessException e) {
-                System.out.println("Illegal access to field: " + entry.getKey());
+                Method setter = clazz.getMethod(setterName, String.class);
+                setter.invoke(obj, fieldValue);
+            } catch (NoSuchMethodException e) {
+                System.out.println("No such setter method: " + setterName);
+            } catch (IllegalAccessException | IllegalArgumentException e) {
+                System.out.println("Illegal access or argument to method: " + setterName);
             }
         }
 
@@ -27,12 +30,22 @@ public class ConvertMap {
         Map<String, String> map = new HashMap<>();
         Class<?> clazz = obj.getClass();
 
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            String fieldName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-            map.put(fieldName, field.get(obj).toString());
+        while (clazz != null) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.getName().startsWith("get") && method.getParameterCount() == 0 &&
+                        !method.getName().equals("getClass") &&
+                        !method.getName().equals("getTipo") &&
+                        !method.getName().equals("getNomeCompleto")) {
+                    String fieldName = method.getName().substring(3);
+                    fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
+                    Object value = method.invoke(obj);
+                    if (value != null) {
+                        map.put(fieldName, value.toString());
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
         }
-
 
         return map;
     }

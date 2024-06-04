@@ -53,4 +53,12 @@ public class ProfissionalController {
             throw new RuntimeException(e);
         }
     }
+
+    public void deletar(Profissional profissional) {
+        try {
+            dao.delet(profissional.getId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
