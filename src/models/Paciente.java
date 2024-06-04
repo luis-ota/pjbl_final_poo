@@ -8,7 +8,8 @@ public class Paciente extends User {
         this.cpf = cpf;
     }
     public Paciente(String nome, String sobrenome, String cpf) {
-        super(nome, sobrenome);
+        this.setNome(nome);
+        this.setSobrenome(sobrenome);
         this.cpf = cpf;
     }
     public Paciente() {

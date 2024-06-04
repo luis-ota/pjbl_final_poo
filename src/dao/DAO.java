@@ -53,7 +53,7 @@ public class DAO extends AbstractDAO {
             }
 
             String camposSFormated = String.join(", ", camposS);
-            String query = "INSERT INTO " + this.tabela + String.format(" (%s) VALUES (", camposSFormated);
+            String query = "INSERT INTO " + this.tabela + String.format(" (id, %s) VALUES (", camposSFormated);
 
             ArrayList<String> camposX = new ArrayList<>();
             camposX.add("UUID()");

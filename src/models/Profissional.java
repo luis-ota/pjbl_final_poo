@@ -8,7 +8,8 @@ public class Profissional extends User {
         this.especialidade = especialidade;
     }
     public Profissional(String nome, String sobrenome, String especialidade) {
-        super(nome, sobrenome);
+        this.setNome(nome);
+        this.setSobrenome(sobrenome);
         this.especialidade = especialidade;
     }
 

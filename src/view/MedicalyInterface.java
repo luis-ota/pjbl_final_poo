@@ -92,7 +92,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
     }
 
     private JPanel getInputMedico() {
-        addDoctorPanel = new JPanel(new GridBagLayout());
+        JPanel addMedicoPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -100,37 +100,37 @@ public class MedicalyInterface extends JFrame implements ActionListener {
         JLabel nomeMedicoLabel = new JLabel("Nome do Médico:");
         gbc.gridx = 0;
         gbc.gridy = 0;
-        addDoctorPanel.add(nomeMedicoLabel, gbc);
+        addMedicoPanel.add(nomeMedicoLabel, gbc);
 
         JTextField nomeMedicoField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        addDoctorPanel.add(nomeMedicoField, gbc);
+        addMedicoPanel.add(nomeMedicoField, gbc);
 
         JLabel sobrenomeMedicoLabel = new JLabel("Sobrenome do Médico:");
         gbc.gridx = 0;
         gbc.gridy = 1;
-        addDoctorPanel.add(sobrenomeMedicoLabel, gbc);
+        addMedicoPanel.add(sobrenomeMedicoLabel, gbc);
 
         JTextField sobrenomeMedicoField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        addDoctorPanel.add(sobrenomeMedicoField, gbc);
+        addMedicoPanel.add(sobrenomeMedicoField, gbc);
 
         JLabel especialidadeMedicoLabel = new JLabel("Especialidade:");
         gbc.gridx = 0;
         gbc.gridy = 2;
-        addDoctorPanel.add(especialidadeMedicoLabel, gbc);
+        addMedicoPanel.add(especialidadeMedicoLabel, gbc);
 
         JTextField especialidadeMedicoField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 2;
-        addDoctorPanel.add(especialidadeMedicoField, gbc);
+        addMedicoPanel.add(especialidadeMedicoField, gbc);
 
-        JButton adicionarMedicoConfirmButton = new JButton("Adicionar Profissional");
+        JButton adicionarMedicoConfirmButton = new JButton("Adicionar Médico");
         gbc.gridx = 1;
         gbc.gridy = 3;
-        addDoctorPanel.add(adicionarMedicoConfirmButton, gbc);
+        addMedicoPanel.add(adicionarMedicoConfirmButton, gbc);
 
         adicionarMedicoConfirmButton.addActionListener(e -> {
             String nome = nomeMedicoField.getText();
@@ -138,8 +138,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
             String especialidade = especialidadeMedicoField.getText();
             if (!nome.isEmpty() && !especialidade.isEmpty() && !sobrenome.isEmpty()) {
                 ProfissionalController controller = new ProfissionalController();
-                Profissional novoMedico = new Profissional(nome, especialidade, sobrenome);
-                System.out.println(novoMedico.getNomeCompleto());
+                Profissional novoMedico = new Profissional(nome, sobrenome, especialidade);
                 controller.adicionar(novoMedico);
                 addDoctor(novoMedico, doctorsPanel.getComponentCount());
                 nomeMedicoField.setText("");
@@ -151,11 +150,12 @@ public class MedicalyInterface extends JFrame implements ActionListener {
             }
         });
 
-        return addDoctorPanel;
+        return addMedicoPanel;
     }
 
+
     private JPanel getInputPaciente() {
-        addPacientePanel = new JPanel(new GridBagLayout());
+        JPanel addPacientePanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -202,7 +202,6 @@ public class MedicalyInterface extends JFrame implements ActionListener {
             if (!nome.isEmpty() && !cpf.isEmpty() && !sobrenome.isEmpty()) {
                 PacienteController controller = new PacienteController();
                 Paciente novoPaciente = new Paciente(nome, sobrenome, cpf);
-                System.out.println(novoPaciente.getNomeCompleto());
                 controller.adicionar(novoPaciente);
                 addPaciente(novoPaciente, pacientesPanel.getComponentCount());
                 nomePacienteField.setText("");
@@ -216,6 +215,7 @@ public class MedicalyInterface extends JFrame implements ActionListener {
 
         return addPacientePanel;
     }
+
 
     private void setDoutores() {
         ArrayList<Profissional> profissionais = profissionalController.listar();
